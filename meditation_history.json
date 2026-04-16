@@ -1,0 +1,65 @@
+{
+  "exercises": [
+    "Tibetan Relaxing",
+    "Breathing Focus",
+    "Body Scan",
+    "Loving-kindness",
+    "Visualization",
+    "Mantra",
+    "Open Awareness"
+  ],
+  "averages": {
+    "Tibetan Relaxing": 0.6007,
+    "Body Scan": 0.3054,
+    "Loving-kindness": 0.8836,
+    "Breathing Focus": 0.3307,
+    "Mantra": 0.3492,
+    "Visualization": 0.4157
+  },
+  "counts": {
+    "Tibetan Relaxing": 1,
+    "Body Scan": 1,
+    "Loving-kindness": 1,
+    "Breathing Focus": 1,
+    "Mantra": 1,
+    "Visualization": 1
+  },
+  "sessions": [
+    {
+      "exercise": "Tibetan Relaxing",
+      "score": 0.6007,
+      "duration_min": 20,
+      "ts": "2026-04-16T23:00:05.970810"
+    },
+    {
+      "exercise": "Body Scan",
+      "score": 0.3054,
+      "duration_min": 38,
+      "ts": "2026-04-16T23:00:11.541848"
+    },
+    {
+      "exercise": "Loving-kindness",
+      "score": 0.8836,
+      "duration_min": 8,
+      "ts": "2026-04-16T23:00:18.965988"
+    },
+    {
+      "exercise": "Breathing Focus",
+      "score": 0.3307,
+      "duration_min": 50,
+      "ts": "2026-04-16T23:00:26.450421"
+    },
+    {
+      "exercise": "Mantra",
+      "score": 0.3492,
+      "duration_min": 70,
+      "ts": "2026-04-16T23:00:40.647312"
+    },
+    {
+      "exercise": "Visualization",
+      "score": 0.4157,
+      "duration_min": 44,
+      "ts": "2026-04-16T23:00:49.526709"
+    }
+  ]
+}
