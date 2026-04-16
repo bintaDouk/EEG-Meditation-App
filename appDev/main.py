@@ -8,9 +8,7 @@ def main():
 
 
 # Plotting the radar plot
-    radar_plot.create_radar_plot()
-
-
+    radar_plot.main()
 
 
 
