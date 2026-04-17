@@ -219,6 +219,84 @@ def render_app_styles():
             padding: 1.15rem 1.2rem;
             margin: 0.35rem 0 1rem;
         }
+        .session-run-timer {
+            font-size: 4.4rem;
+            line-height: 1;
+            font-weight: 600;
+            color: #1f2a21;
+            margin: 0.6rem 0 1rem;
+        }
+        .intro-player-shell {
+            background: rgba(255, 252, 247, 0.88);
+            border: 1px solid rgba(124, 116, 103, 0.14);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        .intro-player-screen {
+            min-height: 230px;
+            padding: 1.25rem;
+            background: linear-gradient(180deg, #273229 0%, #1f2a21 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .intro-player-badge {
+            color: rgba(247, 244, 238, 0.76);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            margin-bottom: 0.5rem;
+        }
+        .intro-player-time {
+            color: #f7f4ee;
+            font-size: 3.6rem;
+            line-height: 1;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+        .intro-player-subtitle {
+            color: rgba(247, 244, 238, 0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 26rem;
+        }
+        .intro-player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            padding: 0.9rem 1rem;
+            background: rgba(255, 252, 247, 0.94);
+        }
+        .intro-player-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 999px;
+            background: #d05f43;
+            flex-shrink: 0;
+        }
+        .intro-player-meta {
+            color: #5f655e;
+            font-size: 0.92rem;
+        }
+        .guided-media-shell {
+            background: rgba(255, 252, 247, 0.86);
+            border: 1px solid rgba(124, 116, 103, 0.14);
+            border-radius: 20px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+        .guided-media-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2a21;
+            margin-bottom: 0.35rem;
+        }
+        .guided-media-copy {
+            color: #61675f;
+            line-height: 1.6;
+        }
         </style>
         """,
         unsafe_allow_html=True,

@@ -24,7 +24,7 @@ if not os.getenv('BIDS_ROOT'):
     print(f"Checked file exists: {env_path.exists()}")
 
 # Import EEG processing modules
-from eeg_processor import Config, DataLoader, DataInspector, Visualizer, Preprocessor
+from eeg_processor import Config, DataLoader, DataInspector, Visualizer, Preprocessor, HRVFeatureExtractor
 
 
 def main():
@@ -197,9 +197,38 @@ def main():
     print()
     
     # ─────────────────────────────────────────────────────────────
-    # 11. VISUALIZATION - CLEANED DATA
+    # 11. HRV FEATURE EXTRACTION
     # ─────────────────────────────────────────────────────────────
-    print("11. VISUALIZING CLEANED DATA")
+    print("11. EXTRACTING HRV FEATURES")
+    print("-" * 70)
+    
+    try:
+        # Extract ECG channel
+        ecg_idx = raw.ch_names.index('EXG7')
+        ecg_signal = raw.get_data(picks=ecg_idx)[0]
+        
+        # Extract HRV features
+        hrv_extractor = HRVFeatureExtractor(sampling_rate=int(raw.info['sfreq']))
+        hrv_features, rr_intervals = hrv_extractor.extract_with_interval(ecg_signal)
+        
+        print(f"[OK] HRV features extracted")
+        print(f"  - RR Interval (mean): {hrv_features['rr_mean']:.2f} ms")
+        print(f"  - SDNN: {hrv_features['sdnn']:.2f} ms")
+        print(f"  - RMSSD: {hrv_features['rmssd']:.2f} ms")
+        print(f"  - pNN50: {hrv_features['pnn50']:.2f}%")
+        print(f"  - LF/HF Ratio: {hrv_features['lf_hf']:.2f}")
+        print(f"  - HF Power: {hrv_features['hf']:.2f} ms²")
+        print(f"  - LF Power: {hrv_features['lf']:.2f} ms²")
+        print(f"  - VLF Power: {hrv_features['vlf']:.2f} ms²")
+    except Exception as e:
+        print(f"[WARNING] Could not extract HRV features: {e}")
+    
+    print()
+    
+    # ─────────────────────────────────────────────────────────────
+    # 12. VISUALIZATION - CLEANED DATA
+    # ─────────────────────────────────────────────────────────────
+    print("12. VISUALIZING CLEANED DATA")
     print("-" * 70)
     
     print("Plotting cleaned EEG signals...")

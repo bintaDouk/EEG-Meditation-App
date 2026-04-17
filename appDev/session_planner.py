@@ -1,8 +1,17 @@
 import streamlit as st
 
 from utils import get_available_exercises
+from session_runtime import RUNTIME_KEY, init_session_runtime
 
-DURATIONS = [5, 10, 15, 20, 30, 45, 60]
+DEMO_DURATION_SECONDS = 30
+DURATION_OPTIONS = [DEMO_DURATION_SECONDS] + [minute * 60 for minute in range(1, 61)]
+
+
+def _format_duration_label(duration_seconds: int) -> str:
+    if duration_seconds < 60:
+        return f"{duration_seconds} sec"
+    minutes = duration_seconds // 60
+    return f"{minutes} min"
 
 
 def init_planner_state():
@@ -11,7 +20,7 @@ def init_planner_state():
     defaults = {
         "planner_practice": default_practice,
         "planner_mode": "Silent",
-        "planner_duration": 10,
+        "planner_duration_seconds": DEMO_DURATION_SECONDS,
         "planner_eeg_connected": True,
         "planner_band_connected": False,
         "session_config": None,
@@ -23,10 +32,12 @@ def init_planner_state():
 
 
 def save_session_config():
+    duration_seconds = st.session_state["planner_duration_seconds"]
     st.session_state["session_config"] = {
         "practice": st.session_state["planner_practice"],
         "mode": st.session_state["planner_mode"],
-        "duration_min": st.session_state["planner_duration"],
+        "duration_seconds": duration_seconds,
+        "duration_label": _format_duration_label(duration_seconds),
         "guided_style": None,
         "notes": "",
         "devices": {
@@ -38,13 +49,19 @@ def save_session_config():
     st.session_state["session_started"] = True
 
 
-def render_session_planner(on_back=None):
+def render_session_planner(on_back=None, on_start=None):
     init_planner_state()
     practices = get_available_exercises()
     if not practices:
         practices = ["Breathing Focus"]
     if st.session_state["planner_practice"] not in practices:
         st.session_state["planner_practice"] = practices[0]
+
+    # If a live session runtime exists, the planner should never render again.
+    if st.session_state.get(RUNTIME_KEY):
+        if on_start is not None:
+            on_start()
+        st.rerun()
 
     top_left, top_right = st.columns([4, 1])
     with top_left:
@@ -70,9 +87,9 @@ def render_session_planner(on_back=None):
 
     duration = st.select_slider(
         "Duration",
-        options=DURATIONS,
-        value=st.session_state["planner_duration"],
-        format_func=lambda value: f"{value} min",
+        options=DURATION_OPTIONS,
+        value=st.session_state["planner_duration_seconds"],
+        format_func=_format_duration_label,
     )
 
     st.markdown("**Connected devices**")
@@ -102,11 +119,14 @@ def render_session_planner(on_back=None):
     if st.button("Start session", use_container_width=True, type="primary"):
         st.session_state["planner_practice"] = practice
         st.session_state["planner_mode"] = mode
-        st.session_state["planner_duration"] = duration
+        st.session_state["planner_duration_seconds"] = duration
         st.session_state["planner_eeg_connected"] = eeg_connected
         st.session_state["planner_band_connected"] = band_connected
         save_session_config()
-        st.success("Session config saved.")
+        init_session_runtime(duration)
+        if on_start is not None:
+            on_start()
+        st.rerun()
 
     st.divider()
 
@@ -116,7 +136,7 @@ def render_session_planner(on_back=None):
     with preview_left:
         st.markdown(f"**Practice:** {practice}")
         st.markdown(f"**Mode:** {mode}")
-        st.markdown(f"**Duration:** {duration} min")
+        st.markdown(f"**Duration:** {_format_duration_label(duration)}")
 
     with preview_right:
         st.markdown(f"**EEG:** {'Connected' if eeg_connected else 'Not connected'}")
