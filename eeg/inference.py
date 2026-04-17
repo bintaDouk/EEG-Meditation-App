@@ -106,7 +106,7 @@ def main():
     )
 
     # Load trained model
-    model_dir = Path(__file__).parent / 'models' / 'meditation_classifier'
+    model_dir = Path(__file__).parent / 'models' / 'med_think_hrv_classifier'
 
     if not model_dir.exists():
         print(f"\n[ERROR] Model not found at {model_dir}")

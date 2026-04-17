@@ -247,7 +247,7 @@ def main():
     print("8. SAVING MODEL")
     print("-" * 70)
 
-    model_dir = Path(__file__).parent / 'models' / 'meditation_classifier'
+    model_dir = Path(__file__).parent / 'models' / 'med_think_hrv_classifier'
     classifier.save(str(model_dir))
     print(f"[OK] Model saved to {model_dir}\n")
 
