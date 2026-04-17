@@ -33,7 +33,7 @@ def save_session_config():
         "mode": st.session_state["planner_mode"],
         "duration_min": st.session_state["planner_duration"],
         "guided_style": None,
-        "notes": st.session_state["planner_notes"],
+        "notes": "",
         "devices": {
             "eeg": st.session_state["planner_eeg_connected"],
             "band": st.session_state["planner_band_connected"],
