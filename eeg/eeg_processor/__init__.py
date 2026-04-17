@@ -13,6 +13,7 @@ from .inspector import DataInspector
 from .visualizer import Visualizer
 from .preprocessor import Preprocessor
 from .feature_extractor import HRVFeatureExtractor
+from .eeg_power_extractor import EEGPowerExtractor
 from .classifier import HRVClassifier, SimpleFFN, HRVDataset
 
 __all__ = [
@@ -22,6 +23,7 @@ __all__ = [
     "Visualizer",
     "Preprocessor",
     "HRVFeatureExtractor",
+    "EEGPowerExtractor",
     "HRVClassifier",
     "SimpleFFN",
     "HRVDataset",

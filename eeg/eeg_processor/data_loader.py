@@ -3,9 +3,12 @@ Data loading module for BIDS EEG data.
 """
 
 from typing import Optional, List, Tuple
+import warnings
 import mne
 from mne_bids import BIDSPath, read_raw_bids, get_entity_vals
 from .config import Config
+
+warnings.filterwarnings('ignore', category=RuntimeWarning, module='mne_bids')
 
 
 class DataLoader:
@@ -90,7 +93,10 @@ class DataLoader:
             )
             
             print(f"Loading BIDS file: {bids_path}")
-            self.raw = read_raw_bids(bids_path=bids_path, verbose=verbose)
+            with warnings.catch_warnings():
+                warnings.filterwarnings('ignore', category=RuntimeWarning)
+                warnings.filterwarnings('ignore', message='.*events.tsv.*')
+                self.raw = read_raw_bids(bids_path=bids_path, verbose=verbose)
             
             print(f"[OK] Successfully loaded EEG data")
             print(f"  - Shape: {self.raw.get_data().shape}")
