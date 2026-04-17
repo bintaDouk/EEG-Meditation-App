@@ -21,13 +21,13 @@ DEFAULT_EXERCISES = [
 ]
 
 THEME = {
-    "bg":     "#0d1b2a",
-    "panel":  "#1a2d42",
-    "grid":   "#2e4460",
-    "accent": "#4dabf7",
-    "prev":   "#a9e34b",
-    "text":   "#e0eaf4",
-    "muted":  "#6b8cae",
+    "bg":     "#f7f4ee",
+    "panel":  "#fffaf3",
+    "grid":   "#d8d2c6",
+    "accent": "#405244",
+    "prev":   "#9caf88",
+    "text":   "#1f2a21",
+    "muted":  "#7a7468",
 }
 
 # ── Persistence ───────────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ def radar_plot(
 
     ax.set_xticks(angles)
     ax.set_xticklabels(exercises, color=THEME["text"],
-                       fontsize=9, fontfamily="monospace")
+                       fontsize=9)
     ax.tick_params(pad=12)
     ax.set_yticklabels([])
     ax.set_ylim(0, 1)
@@ -168,7 +168,7 @@ def radar_plot(
 
     if title:
         ax.set_title(title, color=THEME["muted"],
-                     fontsize=9, pad=20, fontfamily="monospace")
+                     fontsize=9, pad=20)
 
     fig.tight_layout()
     return fig
@@ -179,23 +179,21 @@ def radar_plot(
 def _css():
     st.markdown(f"""
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;500&display=swap');
       html, body, [class*="css"] {{
           background-color: {THEME["bg"]};
           color: {THEME["text"]};
-          font-family: 'Inter', sans-serif;
+          font-family: sans-serif;
       }}
-      h1, h2, h3 {{ font-family: 'Share Tech Mono', monospace; color: {THEME["accent"]}; }}
+      h1, h2, h3 {{ color: {THEME["text"]}; }}
       .stButton > button {{
           background: {THEME["panel"]};
-          color: {THEME["accent"]};
-          border: 1px solid {THEME["accent"]};
-          border-radius: 4px;
-          font-family: 'Share Tech Mono', monospace;
+          color: {THEME["text"]};
+          border: 1px solid rgba(124, 116, 103, 0.18);
+          border-radius: 999px;
       }}
       .stButton > button:hover {{
-          background: {THEME["accent"]};
-          color: {THEME["bg"]};
+          background: {THEME["panel"]};
+          color: {THEME["text"]};
       }}
       .block-container {{ padding-top: 2rem; }}
     </style>

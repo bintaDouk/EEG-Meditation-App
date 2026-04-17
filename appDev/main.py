@@ -1,60 +1,44 @@
 import streamlit as st
-from utils import _css, load_data, radar_plot
 
-# MUST be first Streamlit command
-st.set_page_config(page_title="Meditation Radar", layout="wide", page_icon="🧘")
-
-# ── Radar plot ────────────────────────────
-def Dashboard():
-    _css()
-    data = load_data()
-
-    st.title("Open Source Meditation App")
-    st.subheader("Dashboard")
-
-    # ── Radar (smaller & centered) ─────────────────────
-    if not data["averages"]:
-        st.info("No sessions logged yet.")
-    else:
-        col1, col2, col3 = st.columns([1, 2, 1])
-
-        with col2:
-            fig = radar_plot(data["exercises"], data["averages"])
-            fig.set_size_inches(4.5, 4.5)  # 👈 smaller
-            st.pyplot(fig)
-
-# ── Averages + sessions ────────────────────────────
-def SessionStats():
-    _css()
-    data = load_data()
-    
-    st.subheader("Overall averages")
-
-    if not data["averages"]:
-        st.info("No data available yet.")
-    else:
-        for ex in data["exercises"]:
-            avg = data["averages"].get(ex)
-            if avg is None:
-                continue
-
-            n = data["counts"].get(ex, 0)
-
-            col1, col2, col3 = st.columns([3, 2, 2])
-
-            with col1:
-                st.markdown(f"**{ex}**")
-
-            with col2:
-                st.markdown(f"`{avg:.2f}`")
-
-            with col3:
-                st.markdown(f"_{n} session{'s' if n != 1 else ''}_")
+from app_state import go_to, init_app_state
+from home_view import render_home
+from placeholder_view import render_placeholder_view
+from session_planner import init_planner_state, render_session_planner
+from ui_styles import render_app_styles
 
 
 def main():
-    Dashboard()
-    SessionStats()
+    st.set_page_config(
+        page_title="Open Source Meditation",
+        page_icon="OM",
+        layout="centered",
+    )
+
+    render_app_styles()
+    init_app_state()
+    init_planner_state()
+
+    current_view = st.session_state.current_view
+
+    if current_view == "home":
+        render_home(go_to)
+    elif current_view == "planner":
+        render_session_planner(on_back=lambda: go_to("home"))
+    elif current_view == "submit":
+        render_placeholder_view(
+            "Submit recorded session",
+            "Use this space later for manual uploads or imported recordings.",
+            go_to,
+        )
+    elif current_view == "repository":
+        render_placeholder_view(
+            "Global repository",
+            "This route is reserved for shared resources and community content.",
+            go_to,
+        )
+    else:
+        go_to("home")
+        st.rerun()
 
 
 if __name__ == "__main__":
