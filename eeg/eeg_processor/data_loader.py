@@ -142,10 +142,68 @@ class DataLoader:
         except Exception as e:
             print(f"[ERROR] Error setting channel types: {e}")
     
+    def load_multiple_subjects(
+        self,
+        subjects: Optional[List[str]] = None,
+        session: Optional[str] = None,
+        task: Optional[str] = None,
+        verbose: bool = False,
+        max_subjects: Optional[int] = None
+    ) -> Tuple[dict, list]:
+        """
+        Load EEG data for multiple subjects.
+
+        Parameters
+        ----------
+        subjects : list of str, optional
+            List of subject identifiers to load. If None, loads all available subjects.
+        session : str, optional
+            Session identifier (same for all subjects)
+        task : str, optional
+            Task identifier (same for all subjects)
+        verbose : bool, default=False
+            Verbosity level for MNE operations
+        max_subjects : int, optional
+            Maximum number of subjects to load. If specified, loads only the first max_subjects.
+
+        Returns
+        -------
+        tuple
+            - dict: Mapping of subject ID to loaded raw EEG data
+            - list: List of subjects that failed to load
+        """
+        if not self.subjects:
+            self.explore_bids_structure()
+
+        # Use all subjects if none specified
+        if subjects is None:
+            subjects = self.subjects
+
+        # Limit to max_subjects if specified
+        if max_subjects is not None and max_subjects > 0:
+            subjects = subjects[:max_subjects]
+
+        loaded_data = {}
+        failed_subjects = []
+
+        print(f"\nLoading data for {len(subjects)} subject(s)...")
+        for subject in subjects:
+            raw = self.load_eeg_data(subject, session, task, verbose)
+            if raw is not None:
+                loaded_data[subject] = raw
+            else:
+                failed_subjects.append(subject)
+
+        print(f"\n[SUMMARY] Loaded {len(loaded_data)} subjects, {len(failed_subjects)} failed")
+        if failed_subjects:
+            print(f"  - Failed subjects: {failed_subjects}")
+
+        return loaded_data, failed_subjects
+
     def load_first_available(self) -> Optional[mne.io.BaseRaw]:
         """
         Load the first available subject/task combination.
-        
+
         Returns
         -------
         mne.io.BaseRaw or None
@@ -153,13 +211,13 @@ class DataLoader:
         """
         if not self.subjects:
             self.explore_bids_structure()
-        
+
         if not self.subjects:
             print("[ERROR] No subjects found in BIDS dataset")
             return None
-        
+
         subject = self.subjects[0]
         session = self.sessions[0] if self.sessions else None
         task = self.tasks[0] if self.tasks else None
-        
+
         return self.load_eeg_data(subject, session, task)
