@@ -1,22 +1,9 @@
 import streamlit as st
 
 from analytics_view import render_analytics_panel
-
-
-def _render_clickable_card(title: str, copy: str, href: str, placeholder: str = ""):
-    placeholder_html = (
-        f'<div class="placeholder">{placeholder}</div>' if placeholder else ""
-    )
-    st.markdown(
-        f"""
-        <div class="card card-clickable" onclick="window.location.href='{href}'">
-            <div class="card-title">{title}</div>
-            <div class="card-copy">{copy}</div>
-            {placeholder_html}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+from begin_meditation_card import render_begin_meditation_card
+from global_repository_card import render_global_repository_card
+from submit_recorded_card import render_submit_recorded_card
 
 
 def render_home(go_to):
@@ -37,25 +24,13 @@ def render_home(go_to):
     start_col, submit_col, repository_col = st.columns(3, gap="large")
 
     with start_col:
-        _render_clickable_card(
-            "Begin meditation",
-            "Start a new practice with a calm session planner and device preview.",
-            "?view=planner",
-        )
+        render_begin_meditation_card()
 
     with submit_col:
-        _render_clickable_card(
-            "Submit recorded session",
-            "Upload a completed session from another workflow.",
-            "?view=submit",
-        )
+        render_submit_recorded_card()
 
     with repository_col:
-        _render_clickable_card(
-            "Global repository",
-            "Shared knowledge and community resources can live here later.",
-            "?view=repository",
-        )
+        render_global_repository_card()
 
     st.markdown("## Your analytics")
     st.caption("A calm snapshot of your practice so far.")

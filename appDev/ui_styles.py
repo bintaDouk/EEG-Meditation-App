@@ -123,37 +123,39 @@ def render_app_styles():
             font-size: 1.05rem;
             line-height: 1.8;
         }
-        .card {
+        a.home-card,
+        a.home-card:visited,
+        a.home-card:hover,
+        a.home-card:active {
+            display: block;
+            min-height: 190px;
+            padding: 1.4rem 1.2rem;
             background: #e3ebdf;
             border: 1px solid rgba(71, 89, 72, 0.18);
             border-radius: 22px;
-            padding: 1.4rem 1.2rem;
-            min-height: 190px;
             box-shadow: 0 18px 40px rgba(78, 72, 61, 0.05);
-        }
-        .card-clickable {
-            cursor: pointer;
+            color: #1f2a21 !important;
+            text-decoration: none !important;
             transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
         }
-        .card-clickable:hover {
+        a.home-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 22px 48px rgba(78, 72, 61, 0.1);
             border-color: rgba(71, 89, 72, 0.3);
         }
-        .card-title {
+        .home-card-title {
+            display: block;
             color: #1f2a21;
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.7rem;
+            line-height: 1.35;
         }
-        .card-copy {
+        .home-card-copy {
+            display: block;
             color: #61675f;
+            font-size: 1rem;
             line-height: 1.65;
-            margin-bottom: 1.2rem;
-        }
-        .placeholder {
-            color: #877f72;
-            font-size: 0.92rem;
         }
         </style>
         """,
