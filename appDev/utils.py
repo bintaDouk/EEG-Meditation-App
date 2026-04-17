@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+import random
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -101,6 +102,10 @@ EXERCISE_DETAILS = {
     },
 }
 
+EXERCISE_CATEGORIES = sorted(
+    {details["category"] for details in EXERCISE_DETAILS.values()}
+)
+
 THEME = {
     "bg":     "#f7f4ee",
     "panel":  "#fffaf3",
@@ -110,6 +115,18 @@ THEME = {
     "text":   "#1f2a21",
     "muted":  "#7a7468",
 }
+
+def _normalize_custom_exercise_details(data: dict) -> bool:
+    changed = False
+    custom_details = data.setdefault("custom_exercise_details", {})
+    for exercise_name, details in custom_details.items():
+        category = details.get("category")
+        if category not in EXERCISE_CATEGORIES:
+            details["category"] = random.choice(EXERCISE_CATEGORIES)
+            changed = True
+        details["is_custom"] = True
+    return changed
+
 
 # ── Persistence ───────────────────────────────────────────────────────────────
 
@@ -131,6 +148,8 @@ def load_data() -> dict:
     data.setdefault("counts", {})
     data.setdefault("sessions", [])
     data.setdefault("custom_exercise_details", {})
+    if _normalize_custom_exercise_details(data):
+        save_data(data)
     return data
 
 
@@ -173,6 +192,7 @@ def log_session(exercise: str, score: float, duration_min: int):
 
 def add_exercise(
     name: str,
+    category: str | None = None,
     description: str = "",
     how_to: list[str] | None = None,
     guide_data: str = "",
@@ -182,6 +202,7 @@ def add_exercise(
     clean_name = name.strip()
     if not clean_name:
         return
+    clean_category = category if category in EXERCISE_CATEGORIES else EXERCISE_CATEGORIES[0]
 
     if clean_name not in data["exercises"]:
         data["exercises"].append(clean_name)
@@ -194,7 +215,7 @@ def add_exercise(
     ):
         steps = [step.strip() for step in (how_to or []) if step.strip()]
         data["custom_exercise_details"][clean_name] = {
-            "category": "Custom",
+            "category": clean_category,
             "summary": description.strip() or "A custom meditation exercise added by the user.",
             "description": description.strip() or f"{clean_name} is a custom meditation exercise.",
             "how_to": steps or [
@@ -246,6 +267,10 @@ def get_exercise_details(exercise: str) -> dict:
 
 def get_available_exercises() -> list[str]:
     return load_data()["exercises"]
+
+
+def get_exercise_categories() -> list[str]:
+    return list(EXERCISE_CATEGORIES)
 
 
 # ── Data management pannel ────────────────────────────────────────────────────────────────

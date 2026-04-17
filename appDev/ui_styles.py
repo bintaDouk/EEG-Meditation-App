@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 def render_app_styles():
@@ -219,6 +220,32 @@ def render_app_styles():
             padding: 1.15rem 1.2rem;
             margin: 0.35rem 0 1rem;
         }
+        .library-section-intro {
+            margin-bottom: 0.8rem;
+        }
+        .library-stat-card {
+            background: rgba(255, 252, 247, 0.72);
+            border: 1px solid rgba(124, 116, 103, 0.14);
+            border-radius: 18px;
+            padding: 0.8rem;
+            min-height: 104px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .library-stat-label {
+            color: #7a7468;
+            font-size: 0.88rem;
+            margin-bottom: 0.3rem;
+        }
+        .library-stat-value {
+            color: #1f2a21;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        .library-stat-value--small {
+            font-size: 1rem;
+        }
         .session-run-timer {
             font-size: 4.4rem;
             line-height: 1;
@@ -300,4 +327,34 @@ def render_app_styles():
         </style>
         """,
         unsafe_allow_html=True,
+    )
+    components.html(
+        """
+        <script>
+        const applyDangerButtonStyles = () => {
+          const buttons = window.parent.document.querySelectorAll('button');
+          buttons.forEach((button) => {
+            const label = (button.innerText || '').trim().toLowerCase();
+            const isDeleteButton = label.includes('delete custom exercise')
+              || label.includes('delete permanently')
+              || label.includes('confirm delete');
+
+            if (!isDeleteButton) {
+              return;
+            }
+
+            button.style.background = '#f4c7c3';
+            button.style.borderColor = '#e8a29b';
+            button.style.color = '#6f1d1b';
+          });
+        };
+
+        applyDangerButtonStyles();
+
+        const observer = new MutationObserver(() => applyDangerButtonStyles());
+        observer.observe(window.parent.document.body, { childList: true, subtree: true });
+        </script>
+        """,
+        height=0,
+        width=0,
     )

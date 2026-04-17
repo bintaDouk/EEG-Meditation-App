@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from home_cards import render_card
-from utils import add_exercise, get_exercise_details, load_data
+from utils import add_exercise, delete_exercise, get_exercise_categories, get_exercise_details, load_data
 
 
 ROUTE_ID = "library"
@@ -16,6 +16,10 @@ def init_library_state():
         st.session_state["library_page"] = st.query_params.get("library_page", "overview")
     if "library_selected_exercise" not in st.session_state:
         st.session_state["library_selected_exercise"] = st.query_params.get("exercise")
+    if "library_flash_message" not in st.session_state:
+        st.session_state["library_flash_message"] = None
+    if "library_pending_delete" not in st.session_state:
+        st.session_state["library_pending_delete"] = None
 
 
 def render_library_card():
@@ -41,7 +45,13 @@ def _matching_exercises(exercises: list[str], query: str) -> list[str]:
     if not query:
         return exercises
     query_lower = query.strip().lower()
-    return [exercise for exercise in exercises if query_lower in exercise.lower()]
+    matches = []
+    for exercise in exercises:
+        metadata = get_exercise_details(exercise)
+        category = metadata.get("category", "")
+        if query_lower in exercise.lower() or query_lower in category.lower():
+            matches.append(exercise)
+    return matches
 
 
 def _exercise_stats(exercise: str, data: dict) -> dict:
@@ -166,7 +176,6 @@ def _render_see_all_card(total_count: int):
 
 
 def _render_score_evolution_chart(exercise: str, sessions: list[dict]):
-    st.subheader("Score evolution")
     if not sessions:
         st.info("Your score trend will appear here after you log sessions for this technique.")
         return
@@ -186,7 +195,7 @@ def _render_score_evolution_chart(exercise: str, sessions: list[dict]):
     dates = [item[0] for item in dated_sessions]
     scores = [item[1] for item in dated_sessions]
 
-    fig, ax = plt.subplots(figsize=(4.6, 2.8))
+    fig, ax = plt.subplots(figsize=(6.2, 3.6))
     fig.patch.set_facecolor("#fffaf3")
     ax.set_facecolor("#fffaf3")
     ax.plot(dates, scores, color="#405244", linewidth=2.2, marker="o", markersize=5)
@@ -202,6 +211,18 @@ def _render_score_evolution_chart(exercise: str, sessions: list[dict]):
     ax.grid(axis="y", color="#d8d2c6", alpha=0.45, linewidth=0.8)
     fig.tight_layout()
     st.pyplot(fig)
+
+
+def _render_compact_stat(label: str, value: str):
+    st.markdown(
+        f"""
+        <div class="library-stat-card">
+            <div class="library-stat-label">{label}</div>
+            <div class="library-stat-value library-stat-value--small">{value}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_cards_grid(exercises: list[str], data: dict, key_prefix: str, include_see_all: bool = False):
@@ -232,15 +253,50 @@ def _render_library_header(on_back, title: str, caption: str):
         if on_back is not None and st.button("Back", use_container_width=True):
             on_back()
             st.rerun()
+    flash_message = st.session_state.get("library_flash_message")
+    if flash_message:
+        st.success(flash_message)
+        st.session_state["library_flash_message"] = None
+
+
+def _delete_custom_exercise(exercise: str):
+    delete_exercise(exercise)
+    st.session_state["library_flash_message"] = f'"{exercise}" was deleted from the library.'
+    st.session_state["library_pending_delete"] = None
+    _set_library_page("overview")
+    st.rerun()
+
+
+def _open_delete_confirmation(exercise: str):
+    if hasattr(st, "dialog"):
+        @st.dialog("Delete custom exercise")
+        def confirm_delete_dialog():
+            st.write(
+                "This will permanently remove the custom exercise and all of its session history."
+            )
+            confirm_col, cancel_col = st.columns(2)
+            with confirm_col:
+                if st.button("Delete permanently", type="primary", use_container_width=True):
+                    _delete_custom_exercise(exercise)
+            with cancel_col:
+                if st.button("Cancel", use_container_width=True):
+                    st.rerun()
+
+        confirm_delete_dialog()
+        return
+
+    st.session_state["library_pending_delete"] = exercise
 
 
 def _render_custom_exercise_form():
     st.divider()
     st.subheader("Submit your own exercise")
     st.caption("Add a custom meditation technique to the library and make it available in the session planner.")
+    available_categories = get_exercise_categories()
 
     with st.form("library_custom_exercise_form", clear_on_submit=True):
         name = st.text_input("Exercise name")
+        category = st.selectbox("Category", available_categories)
         description = st.text_area("Description")
         tutorial = st.text_area(
             "Tutorial",
@@ -270,6 +326,7 @@ def _render_custom_exercise_form():
     tutorial_steps = [step.strip() for step in tutorial.splitlines() if step.strip()]
     add_exercise(
         clean_name,
+        category=category,
         description=description,
         how_to=tutorial_steps,
         guide_data=guide_data,
@@ -346,7 +403,7 @@ def _render_detail(on_back, data: dict):
         exercise,
         f'{metadata["category"]} • Individual technique page with guidance and user stats.',
     )
-    back_left, back_right, _ = st.columns([1.3, 1.4, 3])
+    back_left, back_right, delete_col = st.columns([1.3, 1.4, 1.7])
     with back_left:
         if st.button("Back to library", key="library_detail_back"):
             _set_library_page("overview")
@@ -355,6 +412,13 @@ def _render_detail(on_back, data: dict):
         if st.button("See all techniques", key="library_detail_all"):
             _set_library_page("all")
             st.rerun()
+    with delete_col:
+        if metadata.get("is_custom") and st.button(
+            "Delete custom exercise",
+            key="library_detail_delete",
+            use_container_width=True,
+        ):
+            _open_delete_confirmation(exercise)
 
     with st.container():
         st.markdown('<div class="library-detail-panel">', unsafe_allow_html=True)
@@ -364,11 +428,29 @@ def _render_detail(on_back, data: dict):
                 <div class="library-card-kicker">{metadata["category"]}</div>
                 {"<div class='library-card-badge'>Custom</div>" if metadata.get("is_custom") else ""}
             </div>
+            <div class="library-card-title">{exercise}</div>
             """,
             unsafe_allow_html=True,
         )
-        st.write(metadata["description"])
         st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown('<div class="library-section-intro">', unsafe_allow_html=True)
+    st.markdown(f"**Type of meditation:** {metadata['category']}")
+    st.write(metadata["description"])
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if metadata.get("is_custom") and st.session_state.get("library_pending_delete") == exercise:
+        st.warning(
+            "Deleting this custom exercise will also remove all of its logged history."
+        )
+        confirm_col, cancel_col = st.columns(2)
+        with confirm_col:
+            if st.button("Confirm delete", key="library_inline_confirm_delete", type="primary"):
+                _delete_custom_exercise(exercise)
+        with cancel_col:
+            if st.button("Cancel", key="library_inline_cancel_delete"):
+                st.session_state["library_pending_delete"] = None
+                st.rerun()
 
     metric_one, metric_two, metric_three, metric_four = st.columns(4)
     with metric_one:
@@ -378,9 +460,10 @@ def _render_detail(on_back, data: dict):
     with metric_three:
         st.metric("Minutes practiced", stats["total_minutes"])
     with metric_four:
-        st.metric("Last session", _format_timestamp(stats["last_session"]))
+        _render_compact_stat("Last session", _format_timestamp(stats["last_session"]))
 
-    guidance_col, stats_col = st.columns([3, 2], gap="large")
+    st.divider()
+    guidance_col, snapshot_col = st.columns([3, 2], gap="large")
     with guidance_col:
         st.subheader("How to practice")
         for step_number, step in enumerate(metadata["how_to"], start=1):
@@ -391,7 +474,7 @@ def _render_detail(on_back, data: dict):
         if metadata.get("precision_criteria"):
             st.subheader("Precision criteria")
             st.write(metadata["precision_criteria"])
-    with stats_col:
+    with snapshot_col:
         st.subheader("Snapshot")
         if stats["count"] == 0:
             st.info("This technique has not been logged yet.")
@@ -402,8 +485,12 @@ def _render_detail(on_back, data: dict):
             )
             if stats["last_score"] is not None:
                 st.write(f"Most recent session score: **{stats['last_score']:.2f}**")
-        _render_score_evolution_chart(exercise, stats["sessions"])
 
+    st.divider()
+    st.subheader("Score evolution")
+    _render_score_evolution_chart(exercise, stats["sessions"])
+
+    st.divider()
     st.subheader("Recent sessions")
     if not stats["sessions"]:
         st.info("Once this technique is logged, its recent sessions will appear here.")
