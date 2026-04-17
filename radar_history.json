@@ -1,0 +1,35 @@
+[
+  {
+    "label": "2026-04-16 21:30",
+    "categories": [
+      "Breathing",
+      "Body Scan",
+      "Loving-kindness",
+      "Walking",
+      "Visualization",
+      "Mantra",
+      "Transcendental",
+      "Mindfulness"
+    ],
+    "values": [
+      0.33184793880278723,
+      0.4600020523976672,
+      0.6525883141158749,
+      0.3836945207693221,
+      0.628052895822514,
+      0.4729478238570509,
+      0.36794301014891084,
+      0.48955076041693146
+    ],
+    "inputs": {
+      "duration_min": 20,
+      "focus_score": 6,
+      "mood_before": 5,
+      "mood_after": 7,
+      "heart_rate_drop": 15,
+      "breath_rate": 17,
+      "interruptions": 6
+    },
+    "ts": "2026-04-16T21:30:11.629599"
+  }
+]
