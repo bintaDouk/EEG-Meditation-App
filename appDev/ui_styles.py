@@ -6,11 +6,11 @@ def render_app_styles():
         """
         <style>
         .stApp {
-            background: linear-gradient(180deg, #f7f4ee 0%, #f1ede5 100%);
+            background: #ffffff;
             color: #1f2a21;
         }
         [data-testid="stAppViewContainer"] {
-            background: linear-gradient(180deg, #f7f4ee 0%, #f1ede5 100%);
+            background: #ffffff;
         }
         [data-testid="stAppViewBlockContainer"] {
             padding-top: 1rem;
@@ -124,12 +124,21 @@ def render_app_styles():
             line-height: 1.8;
         }
         .card {
-            background: rgba(255, 252, 247, 0.88);
-            border: 1px solid rgba(124, 116, 103, 0.14);
+            background: #e3ebdf;
+            border: 1px solid rgba(71, 89, 72, 0.18);
             border-radius: 22px;
             padding: 1.4rem 1.2rem;
             min-height: 190px;
-            box-shadow: 0 18px 40px rgba(78, 72, 61, 0.06);
+            box-shadow: 0 18px 40px rgba(78, 72, 61, 0.05);
+        }
+        .card-clickable {
+            cursor: pointer;
+            transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+        }
+        .card-clickable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 48px rgba(78, 72, 61, 0.1);
+            border-color: rgba(71, 89, 72, 0.3);
         }
         .card-title {
             color: #1f2a21;
