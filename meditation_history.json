@@ -32,12 +32,16 @@
       "exercise": "Tibetan Relaxing",
       "score": 0.6007,
       "duration_min": 20,
+      "journal_grade": 7,
+      "journal_note": "Settled in slowly. My shoulders relaxed after a few minutes and the second half felt much calmer than the beginning.",
       "ts": "2026-04-16T23:00:05.970810"
     },
     {
       "exercise": "Body Scan",
       "score": 0.3054,
       "duration_min": 38,
+      "journal_grade": 5,
+      "journal_note": "I kept losing the body areas I was tracking, but coming back to the legs helped me re-anchor attention.",
       "ts": "2026-04-16T23:00:11.541848"
     },
     {
@@ -50,6 +54,8 @@
       "exercise": "Breathing Focus",
       "score": 0.3307,
       "duration_min": 50,
+      "journal_grade": 6,
+      "journal_note": "Breath counting worked for a while, then the mind got busy. Still, each return felt cleaner than usual.",
       "ts": "2026-04-16T23:00:26.450421"
     },
     {
@@ -62,6 +68,8 @@
       "exercise": "Visualization",
       "score": 0.4157,
       "duration_min": 44,
+      "journal_grade": 8,
+      "journal_note": "The image stayed vivid almost the whole session. I noticed the scene felt easier to hold when I paid attention to color and temperature.",
       "ts": "2026-04-16T23:00:49.526709"
     },
     {
@@ -86,18 +94,24 @@
       "exercise": "Open Awareness",
       "score": 0.6476,
       "duration_min": 31,
+      "journal_grade": 7,
+      "journal_note": "There was a nice sense of space today. Sounds and thoughts came and went without pulling me in as much.",
       "ts": "2026-04-17T10:25:33.747575"
     },
     {
       "exercise": "Tibetan Relaxing",
       "score": 0.6849,
       "duration_min": 30,
+      "journal_grade": 8,
+      "journal_note": "This one felt grounded from the start. The exhale focus made the whole session softer and more stable.",
       "ts": "2026-04-17T10:33:22.070418"
     },
     {
       "exercise": "Breathing Focus",
       "score": 0.5876,
       "duration_min": 56,
+      "journal_grade": 7,
+      "journal_note": "The breath at the nostrils was clear today. I drifted a few times but noticed it quickly and came back without frustration.",
       "ts": "2026-04-17T10:33:39.371289"
     }
   ],

@@ -4,6 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from session_runtime import clear_session_runtime, get_session_runtime
+from utils import log_session, score_from_eeg
 
 
 def _format_clock(total_seconds: int) -> str:
@@ -150,6 +151,87 @@ def _render_guided_media_panel(runtime: dict):
     st.progress(progress, text=f"Guided media progress {_format_clock(elapsed)}")
 
 
+def _reset_post_session_state():
+    st.session_state.pop("post_session_journal_grade", None)
+    st.session_state.pop("post_session_journal_note", None)
+    st.session_state.pop("post_session_result", None)
+
+
+def _complete_session(go_to, destination: str = "home"):
+    clear_session_runtime()
+    st.session_state["session_started"] = False
+    st.session_state["session_config"] = None
+    _reset_post_session_state()
+    go_to(destination)
+    st.rerun()
+
+
+def _render_journal_form(session_config: dict):
+    st.subheader("Logbook")
+    st.write(
+        "Before seeing your computed score, give yourself a grade and note how the session felt."
+    )
+
+    grade = st.slider(
+        "How well do you think this session went?",
+        min_value=1,
+        max_value=10,
+        value=st.session_state.get("post_session_journal_grade", 7),
+        key="post_session_journal_grade",
+    )
+    note = st.text_area(
+        "What did you notice during this practice?",
+        value=st.session_state.get("post_session_journal_note", ""),
+        placeholder="A few words on your focus, distractions, body sensations, emotions, or what helped.",
+        height=160,
+        key="post_session_journal_note",
+    )
+
+    if st.button("Save journal and show result", use_container_width=True, type="primary"):
+        duration_seconds = session_config.get("duration_seconds", 0)
+        duration_min = max(1, round(duration_seconds / 60))
+        score = score_from_eeg(session_config["practice"], duration_min)
+        log_session(
+            session_config["practice"],
+            score,
+            duration_min,
+            journal_grade=grade,
+            journal_note=note,
+        )
+        st.session_state["post_session_result"] = {
+            "score": score,
+            "journal_grade": grade,
+            "journal_note": note.strip(),
+            "duration_min": duration_min,
+        }
+        st.rerun()
+
+
+def _render_result_panel(session_config: dict, result: dict, go_to):
+    st.subheader("Session result")
+    st.success(f"Computed score: {result['score']:.2f}")
+
+    metric_left, metric_middle, metric_right = st.columns(3)
+    with metric_left:
+        st.metric("Practice", session_config["practice"])
+    with metric_middle:
+        st.metric("Your grade", f"{result['journal_grade']}/10")
+    with metric_right:
+        st.metric("Duration", f"{result['duration_min']} min")
+
+    if result.get("journal_note"):
+        st.markdown("**Your logbook note**")
+        st.write(result["journal_note"])
+
+    action_left, action_right = st.columns(2)
+    with action_left:
+        if st.button("Back to home", use_container_width=True, key="post_result_home"):
+            _complete_session(go_to, "home")
+    with action_right:
+        if st.button("Start another session", use_container_width=True, key="post_result_planner"):
+            _complete_session(go_to, "planner")
+
+
 def render_session_run_view(go_to):
     session_config = st.session_state.get("session_config")
     runtime = get_session_runtime()
@@ -164,6 +246,9 @@ def render_session_run_view(go_to):
     st.caption(f"{session_config['mode']} - {session_config['duration_label']}")
 
     _render_live_session_panel(session_config, runtime)
+
+    session_complete = runtime["session_phase"] == "complete"
+    post_result = st.session_state.get("post_session_result")
 
     info_left, info_right = st.columns(2)
     with info_left:
@@ -183,8 +268,12 @@ def render_session_run_view(go_to):
         _render_guided_media_panel(runtime)
 
     st.divider()
+    if session_complete:
+        if post_result:
+            _render_result_panel(session_config, post_result, go_to)
+        else:
+            _render_journal_form(session_config)
+        return
+
     if st.button("Stop session", use_container_width=True, key="stop_session_primary"):
-        clear_session_runtime()
-        st.session_state["session_started"] = False
-        go_to("planner")
-        st.rerun()
+        _complete_session(go_to, "planner")

@@ -3,6 +3,7 @@ import streamlit as st
 from app_state import go_to, init_app_state
 from home_view import render_home
 from library_card import init_library_state, render_library_view
+from logbook_view import render_logbook_view
 from repository_view import init_repository_state, render_repository_view
 from session_planner import init_planner_state, render_session_planner
 from session_runtime import RUNTIME_KEY
@@ -44,6 +45,9 @@ def main():
         st.stop()
     elif current_view == "library":
         render_library_view(on_back=lambda: go_to("home"))
+        st.stop()
+    elif current_view == "logbook":
+        render_logbook_view(on_back=lambda: go_to("home"))
         st.stop()
     elif current_view == "session_run":
         render_session_run_view(go_to)

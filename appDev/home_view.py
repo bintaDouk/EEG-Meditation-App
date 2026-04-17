@@ -40,4 +40,4 @@ def render_home(go_to):
         """,
         unsafe_allow_html=True,
     )
-    render_analytics_panel()
+    render_analytics_panel(go_to=go_to)

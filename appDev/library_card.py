@@ -11,6 +11,114 @@ ROUTE_ID = "library"
 FEATURED_EXERCISE_LIMIT = 5
 
 
+POWER_BAND_FREQUENCIES = list(range(1, 46))
+POWER_BAND_SERIES = {
+    "session 3": [
+        -94.2, -99.8, -103.0, -110.2, -110.6, -114.2, -114.5, -117.1, -114.0,
+        -113.2, -111.8, -115.0, -118.0, -119.6, -120.0, -120.5, -113.2, -121.0,
+        -121.1, -121.3, -121.6, -122.5, -123.6, -124.8, -125.5, -125.8, -126.2,
+        -126.5, -126.8, -127.0, -127.4, -127.5, -127.7, -128.2, -128.3, -128.1,
+        -128.5, -128.7, -128.6, -128.4, -128.5, -128.6, -128.2, -128.3, -127.8,
+    ],
+    "session 2": [
+        -107.3, -111.4, -114.0, -115.5, -116.8, -117.8, -118.5, -117.5, -114.4,
+        -114.0, -111.3, -114.8, -117.7, -119.2, -119.8, -120.3, -113.6, -120.9,
+        -120.8, -121.0, -120.8, -121.6, -123.2, -123.9, -124.5, -124.6, -125.0,
+        -125.5, -125.4, -125.7, -125.5, -125.8, -125.7, -126.4, -126.4, -126.7,
+        -126.6, -126.9, -126.6, -126.8, -126.5, -126.8, -126.1, -126.0, -125.4,
+    ],
+    "session 1": [
+        -105.0, -109.6, -112.2, -115.0, -117.0, -117.9, -118.8, -118.4, -114.0,
+        -110.7, -109.8, -114.5, -118.5, -120.4, -121.0, -121.4, -116.2, -121.1,
+        -121.0, -121.1, -121.2, -122.8, -124.4, -125.2, -125.9, -126.1, -126.7,
+        -126.9, -127.3, -127.4, -127.8, -128.2, -128.7, -128.8, -129.2, -129.4,
+        -129.7, -129.8, -130.0, -130.2, -130.1, -130.3, -130.4, -130.7, -130.6,
+    ],
+}
+POWER_BAND_EXERCISE_SERIES = {
+    "Loving-kindness": [
+        ("session 2", POWER_BAND_SERIES["session 3"]),
+        ("session 1", POWER_BAND_SERIES["session 2"]),
+        ("session 3", POWER_BAND_SERIES["session 1"]),
+    ],
+    "Tibetan Relaxing": [
+        ("session 2", [
+            -108.2, -111.4, -113.3, -114.5, -115.0, -116.7, -117.1, -116.6, -110.0,
+            -110.0, -109.7, -115.8, -117.8, -119.3, -120.0, -120.4, -113.0, -121.0,
+            -121.2, -121.6, -121.6, -123.8, -124.9, -125.5, -125.9, -126.0, -126.5,
+            -126.7, -126.9, -127.2, -127.0, -127.4, -127.5, -127.8, -128.2, -128.1,
+            -128.5, -128.5, -128.9, -128.8, -128.6, -129.0, -129.2, -129.1, -129.2,
+        ]),
+        ("session 1", [
+            -100.0, -110.6, -113.0, -114.0, -115.8, -116.6, -117.0, -114.9, -111.4,
+            -111.6, -110.0, -115.6, -118.3, -119.8, -120.3, -120.8, -113.4, -121.3,
+            -121.6, -121.7, -122.1, -123.6, -124.9, -125.6, -126.1, -126.4, -126.6,
+            -127.1, -127.3, -127.3, -127.7, -128.1, -128.2, -128.3, -128.6, -128.7,
+            -128.7, -129.0, -129.0, -129.2, -129.1, -129.2, -129.4, -129.3, -129.6,
+        ]),
+    ],
+    "Breathing Focus": [
+        ("session 2", [
+            -108.2, -111.4, -113.3, -114.5, -115.0, -116.7, -117.1, -116.6, -110.0,
+            -110.0, -109.7, -115.8, -117.8, -119.3, -120.0, -120.4, -113.0, -121.0,
+            -121.2, -121.6, -121.6, -123.8, -124.9, -125.5, -125.9, -126.0, -126.5,
+            -126.7, -126.9, -127.2, -127.0, -127.4, -127.5, -127.8, -128.2, -128.1,
+            -128.5, -128.5, -128.9, -128.8, -128.6, -129.0, -129.2, -129.1, -129.2,
+        ]),
+        ("session 1", [
+            -100.0, -110.6, -113.0, -114.0, -115.8, -116.6, -117.0, -114.9, -111.4,
+            -111.6, -110.0, -115.6, -118.3, -119.8, -120.3, -120.8, -113.4, -121.3,
+            -121.6, -121.7, -122.1, -123.6, -124.9, -125.6, -126.1, -126.4, -126.6,
+            -127.1, -127.3, -127.3, -127.7, -128.1, -128.2, -128.3, -128.6, -128.7,
+            -128.7, -129.0, -129.0, -129.2, -129.1, -129.2, -129.4, -129.3, -129.6,
+        ]),
+    ],
+    "Body Scan": [
+        ("session 2", [
+            -108.2, -111.4, -113.3, -114.5, -115.0, -116.7, -117.1, -116.6, -110.0,
+            -110.0, -109.7, -115.8, -117.8, -119.3, -120.0, -120.4, -113.0, -121.0,
+            -121.2, -121.6, -121.6, -123.8, -124.9, -125.5, -125.9, -126.0, -126.5,
+            -126.7, -126.9, -127.2, -127.0, -127.4, -127.5, -127.8, -128.2, -128.1,
+            -128.5, -128.5, -128.9, -128.8, -128.6, -129.0, -129.2, -129.1, -129.2,
+        ]),
+        ("session 1", [
+            -100.0, -110.6, -113.0, -114.0, -115.8, -116.6, -117.0, -114.9, -111.4,
+            -111.6, -110.0, -115.6, -118.3, -119.8, -120.3, -120.8, -113.4, -121.3,
+            -121.6, -121.7, -122.1, -123.6, -124.9, -125.6, -126.1, -126.4, -126.6,
+            -127.1, -127.3, -127.3, -127.7, -128.1, -128.2, -128.3, -128.6, -128.7,
+            -128.7, -129.0, -129.0, -129.2, -129.1, -129.2, -129.4, -129.3, -129.6,
+        ]),
+    ],
+    "Visualization": [
+        ("session 1", [
+            -97.6, -103.3, -104.8, -106.1, -106.4, -108.8, -109.6, -110.3, -110.7,
+            -110.6, -105.6, -106.1, -110.7, -112.3, -113.0, -114.2, -114.2, -113.9,
+            -111.4, -114.9, -115.0, -115.1, -115.0, -115.6, -116.5, -116.6, -117.1,
+            -117.3, -117.6, -118.0, -118.6, -118.5, -118.9, -119.0, -118.9, -118.9,
+            -119.3, -119.3, -119.6, -119.9, -119.8, -119.8, -120.0, -119.9, -120.5,
+        ]),
+    ],
+    "Mantra": [
+        ("session 1", [
+            -101.5, -108.8, -111.5, -112.5, -112.7, -115.8, -116.7, -117.2, -117.5,
+            -117.4, -109.5, -110.4, -115.5, -117.3, -119.3, -120.4, -120.8, -121.0,
+            -113.7, -121.0, -120.8, -120.6, -120.6, -120.3, -120.4, -121.2, -122.0,
+            -122.3, -122.7, -122.8, -123.0, -123.1, -123.3, -123.3, -123.4, -123.6,
+            -123.4, -123.6, -123.9, -123.9, -123.7, -123.8, -123.7, -124.2, -123.9,
+        ]),
+    ],
+    "Open Awareness": [
+        ("session 1", [
+            -103.3, -110.8, -113.2, -114.1, -114.3, -117.4, -118.8, -119.1, -119.0,
+            -118.4, -112.2, -113.5, -118.8, -120.2, -121.0, -121.9, -122.7, -123.4,
+            -123.4, -114.0, -123.4, -123.2, -123.2, -123.8, -124.7, -125.3, -125.5,
+            -125.9, -125.8, -126.0, -126.1, -126.2, -126.2, -126.4, -126.3, -126.5,
+            -126.7, -127.2, -127.1, -126.9, -127.1, -127.0, -126.9, -127.2, -127.4,
+        ]),
+    ],
+}
+
+
 def init_library_state():
     if "library_page" not in st.session_state:
         st.session_state["library_page"] = st.query_params.get("library_page", "overview")
@@ -211,6 +319,131 @@ def _render_score_evolution_chart(exercise: str, sessions: list[dict]):
     ax.grid(axis="y", color="#d8d2c6", alpha=0.45, linewidth=0.8)
     fig.tight_layout()
     st.pyplot(fig)
+
+
+def _render_power_band_evolution_chart(exercise: str):
+    fig, ax = plt.subplots(figsize=(12, 4.6))
+    fig.patch.set_facecolor("#fffaf3")
+    ax.set_facecolor("#fffaf3")
+
+    band_regions = [
+        ("Delta", 1, 4, "#d9edf7"),
+        ("Theta", 4, 8, "#d8f3dc"),
+        ("Alpha", 8, 12, "#f8f1d2"),
+        ("Beta", 12, 30, "#f7d9cb"),
+        ("Gamma", 30, 45, "#ead9f5"),
+    ]
+    for label, start, end, color in band_regions:
+        ax.axvspan(start, end, color=color, alpha=0.55, label=label)
+
+    line_colors = {
+        "session 1": "#ff7f0e",
+        "session 2": "#1f77b4",
+        "session 3": "#2ca02c",
+    }
+    series_to_plot = POWER_BAND_EXERCISE_SERIES.get(
+        exercise,
+        list(POWER_BAND_SERIES.items()),
+    )
+    for label, values in series_to_plot:
+        ax.plot(
+            POWER_BAND_FREQUENCIES,
+            values,
+            linewidth=1.9,
+            color=line_colors[label],
+            label=label,
+        )
+
+    ax.set_title(exercise, fontsize=14, color="#1f1f1f", pad=8)
+    ax.set_xlabel("Frequency (Hz)", fontsize=10)
+    ax.set_ylabel("Power (dB)", fontsize=10)
+    ax.set_xlim(0, 47)
+    ax.set_ylim(-132.5, -92.5)
+    ax.spines["top"].set_color("#222222")
+    ax.spines["right"].set_color("#222222")
+    ax.spines["left"].set_color("#222222")
+    ax.spines["bottom"].set_color("#222222")
+    ax.legend(loc="upper right", frameon=True, facecolor="white", edgecolor="#c7c7c7")
+    fig.tight_layout()
+    st.pyplot(fig)
+
+
+def _exercise_logbook_entries(exercise: str, sessions: list[dict]) -> list[dict]:
+    entries = []
+    for index, session in enumerate(sessions):
+        if session.get("journal_grade") is None and not session.get("journal_note"):
+            continue
+        parsed = _parse_timestamp(session.get("ts"))
+        entries.append(
+            {
+                **session,
+                "_entry_id": f"{exercise}_logbook_{index}",
+                "_parsed_time": parsed or datetime.min,
+            }
+        )
+
+    entries.sort(key=lambda item: item["_parsed_time"], reverse=True)
+    return entries
+
+
+def _render_exercise_logbook(exercise: str, sessions: list[dict]):
+    entries = _exercise_logbook_entries(exercise, sessions)
+    if not entries:
+        st.info("The notes linked to this exercise will appear here after you save a Logbook entry.")
+        return
+
+    state_key = f"selected_logbook_entry_{exercise}"
+    valid_ids = {entry["_entry_id"] for entry in entries}
+    if st.session_state.get(state_key) not in valid_ids:
+        st.session_state[state_key] = entries[0]["_entry_id"]
+
+    list_col, detail_col = st.columns([1.2, 1.8], gap="large")
+
+    with list_col:
+        for entry in entries:
+            label = _format_timestamp(entry.get("ts"))
+            button_type = (
+                "primary"
+                if st.session_state.get(state_key) == entry["_entry_id"]
+                else "secondary"
+            )
+            if st.button(
+                label,
+                key=entry["_entry_id"],
+                use_container_width=True,
+                type=button_type,
+            ):
+                st.session_state[state_key] = entry["_entry_id"]
+                st.rerun()
+
+    selected_entry = next(
+        entry for entry in entries if entry["_entry_id"] == st.session_state[state_key]
+    )
+
+    with detail_col:
+        metric_left, metric_right = st.columns(2)
+        with metric_left:
+            journal_grade = selected_entry.get("journal_grade")
+            st.metric(
+                "Self-grade",
+                f"{journal_grade}/10" if journal_grade is not None else "N/A",
+            )
+        with metric_right:
+            score = selected_entry.get("score")
+            st.metric(
+                "Computed score",
+                f"{score:.2f}" if score is not None else "N/A",
+            )
+
+        st.caption(
+            f"{_format_timestamp(selected_entry.get('ts'))} • {selected_entry.get('duration_min', 'N/A')} min"
+        )
+        st.markdown("**Your note**")
+        note = selected_entry.get("journal_note", "").strip()
+        if note:
+            st.write(note)
+        else:
+            st.write("_No note written for this session._")
 
 
 def _render_compact_stat(label: str, value: str):
@@ -489,6 +722,13 @@ def _render_detail(on_back, data: dict):
     st.divider()
     st.subheader("Score evolution")
     _render_score_evolution_chart(exercise, stats["sessions"])
+
+    st.subheader("Power band evolution")
+    _render_power_band_evolution_chart(exercise)
+
+    st.divider()
+    st.subheader("Logbook")
+    _render_exercise_logbook(exercise, stats["sessions"])
 
     st.divider()
     st.subheader("Recent sessions")

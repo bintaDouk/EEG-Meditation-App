@@ -33,6 +33,9 @@ def init_planner_state():
 
 def save_session_config():
     duration_seconds = st.session_state["planner_duration_seconds"]
+    st.session_state.pop("post_session_journal_grade", None)
+    st.session_state.pop("post_session_journal_note", None)
+    st.session_state.pop("post_session_result", None)
     st.session_state["session_config"] = {
         "practice": st.session_state["planner_practice"],
         "mode": st.session_state["planner_mode"],

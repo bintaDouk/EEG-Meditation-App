@@ -148,6 +148,9 @@ def load_data() -> dict:
     data.setdefault("counts", {})
     data.setdefault("sessions", [])
     data.setdefault("custom_exercise_details", {})
+    for session in data["sessions"]:
+        session.setdefault("journal_grade", None)
+        session.setdefault("journal_note", "")
     if _normalize_custom_exercise_details(data):
         save_data(data)
     return data
@@ -169,7 +172,13 @@ def _default_data() -> dict:
     }
 
 
-def log_session(exercise: str, score: float, duration_min: int):
+def log_session(
+    exercise: str,
+    score: float,
+    duration_min: int,
+    journal_grade: int | None = None,
+    journal_note: str = "",
+):
     data = load_data()
     prev_averages = dict(data["averages"])
 
@@ -183,6 +192,8 @@ def log_session(exercise: str, score: float, duration_min: int):
         "exercise":     exercise,
         "score":        round(score, 4),
         "duration_min": duration_min,
+        "journal_grade": journal_grade,
+        "journal_note": journal_note.strip(),
         "ts":           datetime.now().isoformat(),
     })
 

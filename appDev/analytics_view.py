@@ -97,7 +97,7 @@ def _render_session_history_panel(data: dict):
     )
 
 
-def render_analytics_panel():
+def render_analytics_panel(go_to=None):
     _css()
 
     data = load_data()
@@ -119,6 +119,9 @@ def render_analytics_panel():
             fig = radar_plot(data["exercises"], data["averages"])
             fig.set_size_inches(5.95, 5.95)
             st.pyplot(fig)
+        if go_to is not None and st.button("Logbook", key="analytics_logbook_button"):
+            go_to("logbook")
+            st.rerun()
 
     with history_col:
         _render_session_history_panel(data)
