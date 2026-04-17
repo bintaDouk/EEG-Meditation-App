@@ -3,6 +3,22 @@ import streamlit as st
 from analytics_view import render_analytics_panel
 
 
+def _render_clickable_card(title: str, copy: str, href: str, placeholder: str = ""):
+    placeholder_html = (
+        f'<div class="placeholder">{placeholder}</div>' if placeholder else ""
+    )
+    st.markdown(
+        f"""
+        <div class="card card-clickable" onclick="window.location.href='{href}'">
+            <div class="card-title">{title}</div>
+            <div class="card-copy">{copy}</div>
+            {placeholder_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def render_home(go_to):
     st.markdown(
         """
@@ -21,54 +37,25 @@ def render_home(go_to):
     start_col, submit_col, repository_col = st.columns(3, gap="large")
 
     with start_col:
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-title">Begin meditation</div>
-                <div class="card-copy">
-                    Start a new practice with a calm session planner and device preview.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+        _render_clickable_card(
+            "Begin meditation",
+            "Start a new practice with a calm session planner and device preview.",
+            "?view=planner",
         )
-        if st.button("Open planner", use_container_width=True, key="home_begin"):
-            go_to("planner")
-            st.rerun()
 
     with submit_col:
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-title">Submit recorded session</div>
-                <div class="card-copy">
-                    Upload a completed session from another workflow.
-                </div>
-                <div class="placeholder">Empty for the pitch.</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+        _render_clickable_card(
+            "Submit recorded session",
+            "Upload a completed session from another workflow.",
+            "?view=submit",
         )
-        if st.button("Open submit", use_container_width=True, key="home_submit"):
-            go_to("submit")
-            st.rerun()
 
     with repository_col:
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-title">Global repository</div>
-                <div class="card-copy">
-                    Shared knowledge and community resources can live here later.
-                </div>
-                <div class="placeholder">Empty for the pitch.</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+        _render_clickable_card(
+            "Global repository",
+            "Shared knowledge and community resources can live here later.",
+            "?view=repository",
         )
-        if st.button("Open repository", use_container_width=True, key="home_repository"):
-            go_to("repository")
-            st.rerun()
 
     st.markdown("## Your analytics")
     st.caption("A calm snapshot of your practice so far.")
