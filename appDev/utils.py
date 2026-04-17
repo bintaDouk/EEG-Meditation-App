@@ -20,6 +20,87 @@ DEFAULT_EXERCISES = [
     "Open Awareness",
 ]
 
+EXERCISE_DETAILS = {
+    "Tibetan Relaxing": {
+        "category": "Restoration",
+        "summary": "A soft settling practice that eases the body before deeper stillness.",
+        "description": (
+            "Tibetan Relaxing invites the body to unclench first so the mind can follow. "
+            "It works well at the start of the day, before sleep, or after an intense session."
+        ),
+        "how_to": [
+            "Let the shoulders drop and take a few slower exhalations than inhalations.",
+            "Scan the face, jaw, chest, and belly for hidden tension and release it gently.",
+            "Stay with the feeling of softness instead of trying to force concentration.",
+        ],
+    },
+    "Breathing Focus": {
+        "category": "Attention",
+        "summary": "A classic anchor practice built around the rhythm of the breath.",
+        "description": (
+            "Breathing Focus trains steady attention by returning awareness to inhale and exhale. "
+            "It is simple, reliable, and a strong baseline practice for tracking consistency."
+        ),
+        "how_to": [
+            "Choose one breath location such as the nostrils, chest, or belly.",
+            "Count breaths or silently note in and out when attention drifts.",
+            "Each return to the breath counts as part of the practice, not a mistake.",
+        ],
+    },
+    "Body Scan": {
+        "category": "Awareness",
+        "summary": "A grounded practice for noticing sensation from head to toe.",
+        "description": (
+            "Body Scan helps widen awareness and reconnect attention with physical sensation. "
+            "It is useful when the mind feels restless, scattered, or overly verbal."
+        ),
+        "how_to": [
+            "Move attention through the body slowly, region by region.",
+            "Notice warmth, tingling, pressure, or numbness without needing to change anything.",
+            "If the mind races, return to the last body area you clearly remember.",
+        ],
+    },
+    "Loving-kindness": {
+        "category": "Compassion",
+        "summary": "A heart-centered technique that grows goodwill toward self and others.",
+        "description": (
+            "Loving-kindness uses short phrases and emotional intention to cultivate warmth. "
+            "It can balance highly effortful concentration with gentleness and connection."
+        ),
+        "how_to": [
+            "Begin with yourself using simple phrases such as may I be safe and at ease.",
+            "Expand the phrases to someone you care about, then to neutral people, then wider circles.",
+            "Focus more on sincerity than on producing a specific emotion.",
+        ],
+    },
+    "Visualization": {
+        "category": "Imagery",
+        "summary": "A guided inner-image technique for calm, direction, and emotional tone.",
+        "description": (
+            "Visualization pairs attention with mental imagery, often using a place, light, or symbolic scene. "
+            "It can support motivation, emotional regulation, and a sense of intention."
+        ),
+        "how_to": [
+            "Choose one image and keep it stable rather than switching scenes repeatedly.",
+            "Layer in sound, color, texture, or temperature to make the image feel vivid.",
+            "If the image fades, return to the emotional quality you want it to evoke.",
+        ],
+    },
+    "Open Awareness": {
+        "category": "Observation",
+        "summary": "A spacious practice that notices thoughts, sensations, and sounds as they arise.",
+        "description": (
+            "Open Awareness broadens attention beyond one anchor and invites experience to come and go. "
+            "It is useful once basic stability is present and you want a less effortful style of monitoring."
+        ),
+        "how_to": [
+            "Let sounds, sensations, and thoughts enter awareness without chasing any of them.",
+            "Notice the changing field of experience instead of locking onto one object.",
+            "When you get absorbed, gently reopen to the whole moment again.",
+        ],
+    },
+}
+
 THEME = {
     "bg":     "#f7f4ee",
     "panel":  "#fffaf3",
@@ -35,18 +116,38 @@ THEME = {
 def load_data() -> dict:
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE) as f:
-            return json.load(f)
+            data = json.load(f)
+    else:
+        data = {
+            "exercises": list(DEFAULT_EXERCISES),
+            "averages":  {},
+            "counts":    {},
+            "sessions":  [],
+            "custom_exercise_details": {},
+        }
+
+    data.setdefault("exercises", list(DEFAULT_EXERCISES))
+    data.setdefault("averages", {})
+    data.setdefault("counts", {})
+    data.setdefault("sessions", [])
+    data.setdefault("custom_exercise_details", {})
+    return data
+
+
+def save_data(data: dict) -> None:
+    data.setdefault("custom_exercise_details", {})
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def _default_data() -> dict:
     return {
         "exercises": list(DEFAULT_EXERCISES),
         "averages":  {},
         "counts":    {},
         "sessions":  [],
+        "custom_exercise_details": {},
     }
-
-
-def save_data(data: dict) -> None:
-    with open(HISTORY_FILE, "w") as f:
-        json.dump(data, f, indent=2)
 
 
 def log_session(exercise: str, score: float, duration_min: int):
@@ -70,11 +171,81 @@ def log_session(exercise: str, score: float, duration_min: int):
     return prev_averages, data["averages"]
 
 
-def add_exercise(name: str) -> None:
+def add_exercise(
+    name: str,
+    description: str = "",
+    how_to: list[str] | None = None,
+    guide_data: str = "",
+    precision_criteria: str = "",
+) -> None:
     data = load_data()
-    if name and name not in data["exercises"]:
-        data["exercises"].append(name)
-        save_data(data)
+    clean_name = name.strip()
+    if not clean_name:
+        return
+
+    if clean_name not in data["exercises"]:
+        data["exercises"].append(clean_name)
+
+    if (
+        description.strip()
+        or (how_to and any(step.strip() for step in how_to))
+        or guide_data.strip()
+        or precision_criteria.strip()
+    ):
+        steps = [step.strip() for step in (how_to or []) if step.strip()]
+        data["custom_exercise_details"][clean_name] = {
+            "category": "Custom",
+            "summary": description.strip() or "A custom meditation exercise added by the user.",
+            "description": description.strip() or f"{clean_name} is a custom meditation exercise.",
+            "how_to": steps or [
+                "Follow the custom instructions you saved for this technique.",
+            ],
+            "guide_data": guide_data.strip(),
+            "precision_criteria": precision_criteria.strip(),
+            "created_at": datetime.now().isoformat(),
+            "is_custom": True,
+        }
+
+    save_data(data)
+
+
+def get_exercise_details(exercise: str) -> dict:
+    data = load_data()
+    custom_metadata = data["custom_exercise_details"].get(exercise)
+    if custom_metadata is not None:
+        return {
+            **custom_metadata,
+            "created_at": custom_metadata.get("created_at"),
+        }
+
+    metadata = EXERCISE_DETAILS.get(exercise)
+    if metadata is not None:
+        return {
+            **metadata,
+            "guide_data": metadata.get("guide_data", ""),
+            "precision_criteria": metadata.get("precision_criteria", ""),
+            "is_custom": False,
+        }
+    return {
+        "category": "Technique",
+        "summary": "A saved meditation exercise in your library.",
+        "description": (
+            f"{exercise} is available in your library. Add fuller guidance here later as you refine "
+            "the technique and collect more user-specific insight."
+        ),
+        "how_to": [
+            "Settle into a comfortable posture and begin with a few slower breaths.",
+            "Follow the core instructions of this technique with a light but steady attention.",
+            "After practice, note what felt effective so the method can evolve over time.",
+        ],
+        "guide_data": "",
+        "precision_criteria": "",
+        "is_custom": False,
+    }
+
+
+def get_available_exercises() -> list[str]:
+    return load_data()["exercises"]
 
 
 # ── Data management pannel ────────────────────────────────────────────────────────────────
@@ -98,6 +269,7 @@ def delete_exercise(name: str):
     data["sessions"] = [
         s for s in data["sessions"] if s["exercise"] != name
     ]
+    data["custom_exercise_details"].pop(name, None)
 
     save_data(data)
 

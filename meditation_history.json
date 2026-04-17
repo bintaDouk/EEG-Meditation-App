@@ -6,7 +6,9 @@
     "Loving-kindness",
     "Visualization",
     "Mantra",
-    "Open Awareness"
+    "Open Awareness",
+    "Custom demo 1",
+    "Custom 2"
   ],
   "averages": {
     "Tibetan Relaxing": 0.6428,
@@ -99,5 +101,33 @@
       "duration_min": 56,
       "ts": "2026-04-17T10:33:39.371289"
     }
-  ]
+  ],
+  "custom_exercise_details": {
+    "Custom demo 1": {
+      "category": "Custom",
+      "summary": "This is a test",
+      "description": "This is a test",
+      "how_to": [
+        "1. meditate",
+        "2. stop meditating"
+      ],
+      "guide_data": "some data",
+      "precision_criteria": "some other data",
+      "is_custom": true
+    },
+    "Custom 2": {
+      "category": "Custom",
+      "summary": "This is a test",
+      "description": "This is a test",
+      "how_to": [
+        "1. meditate",
+        "2. meditate more",
+        "3. stop meditating"
+      ],
+      "guide_data": "data a",
+      "precision_criteria": "data b",
+      "created_at": "2026-04-17T15:03:09.175130",
+      "is_custom": true
+    }
+  }
 }

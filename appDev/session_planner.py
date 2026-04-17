@@ -1,20 +1,15 @@
 import streamlit as st
 
-
-PRACTICES = [
-    "Vipasanna",
-    "Non dual awakening",
-    "Compassionate awakening",
-    "Non sleep deep rest",
-    "Custom",
-]
+from utils import get_available_exercises
 
 DURATIONS = [5, 10, 15, 20, 30, 45, 60]
 
 
 def init_planner_state():
+    practices = get_available_exercises()
+    default_practice = practices[0] if practices else "Breathing Focus"
     defaults = {
-        "planner_practice": "Vipasanna",
+        "planner_practice": default_practice,
         "planner_mode": "Silent",
         "planner_duration": 10,
         "planner_eeg_connected": True,
@@ -45,6 +40,11 @@ def save_session_config():
 
 def render_session_planner(on_back=None):
     init_planner_state()
+    practices = get_available_exercises()
+    if not practices:
+        practices = ["Breathing Focus"]
+    if st.session_state["planner_practice"] not in practices:
+        st.session_state["planner_practice"] = practices[0]
 
     top_left, top_right = st.columns([4, 1])
     with top_left:
@@ -57,8 +57,8 @@ def render_session_planner(on_back=None):
 
     practice = st.selectbox(
         "Meditation type",
-        PRACTICES,
-        index=PRACTICES.index(st.session_state["planner_practice"]),
+        practices,
+        index=practices.index(st.session_state["planner_practice"]),
     )
 
     mode = st.radio(

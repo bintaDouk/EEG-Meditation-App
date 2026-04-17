@@ -157,6 +157,68 @@ def render_app_styles():
             font-size: 1rem;
             line-height: 1.65;
         }
+        .library-card-shell {
+            min-height: 250px;
+            padding: 1.2rem 1.1rem 0.35rem;
+            background: linear-gradient(180deg, #f5f1e9 0%, #edf3e8 100%);
+            border: 1px solid rgba(71, 89, 72, 0.16);
+            border-radius: 22px;
+            box-shadow: 0 18px 36px rgba(78, 72, 61, 0.05);
+            margin-bottom: 1rem;
+        }
+        .library-card-shell--ghost {
+            background: linear-gradient(180deg, #f7f4ee 0%, #ffffff 100%);
+            border-style: dashed;
+        }
+        .library-card-kicker {
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            color: #7a7468;
+            margin-bottom: 0.55rem;
+        }
+        .library-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.45rem;
+        }
+        .library-card-header .library-card-kicker {
+            margin-bottom: 0;
+        }
+        .library-card-badge {
+            background: rgba(31, 42, 33, 0.08);
+            color: #1f2a21;
+            border: 1px solid rgba(31, 42, 33, 0.12);
+            border-radius: 999px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+        .library-card-title {
+            color: #1f2a21;
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 0.65rem;
+        }
+        .library-card-copy,
+        .library-detail-copy {
+            color: #556054;
+            font-size: 0.98rem;
+            line-height: 1.65;
+        }
+        .library-detail-panel {
+            background: linear-gradient(135deg, rgba(227, 235, 223, 0.9), rgba(247, 244, 238, 0.98));
+            border: 1px solid rgba(71, 89, 72, 0.14);
+            border-radius: 22px;
+            padding: 1.15rem 1.2rem;
+            margin: 0.35rem 0 1rem;
+        }
         </style>
         """,
         unsafe_allow_html=True,

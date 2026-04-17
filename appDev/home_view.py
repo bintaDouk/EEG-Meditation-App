@@ -3,7 +3,7 @@ import streamlit as st
 from analytics_view import render_analytics_panel
 from begin_meditation_card import render_begin_meditation_card
 from global_repository_card import render_global_repository_card
-from submit_recorded_card import render_submit_recorded_card
+from library_card import render_library_card
 
 
 def render_home(go_to):
@@ -21,13 +21,13 @@ def render_home(go_to):
         unsafe_allow_html=True,
     )
 
-    start_col, submit_col, repository_col = st.columns(3, gap="large")
+    start_col, library_col, repository_col = st.columns(3, gap="large")
 
     with start_col:
         render_begin_meditation_card()
 
-    with submit_col:
-        render_submit_recorded_card()
+    with library_col:
+        render_library_card()
 
     with repository_col:
         render_global_repository_card()
