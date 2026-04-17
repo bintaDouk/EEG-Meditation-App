@@ -10,22 +10,24 @@
     "Custom demo 1"
   ],
   "averages": {
-    "Tibetan Relaxing": 0.6428,
+    "Tibetan Relaxing": 0.6265,
     "Body Scan": 0.476,
-    "Loving-kindness": 0.6738,
-    "Breathing Focus": 0.4592,
-    "Mantra": 0.3492,
+    "Loving-kindness": 0.6898,
+    "Breathing Focus": 0.4109,
+    "Mantra": 0.474,
     "Visualization": 0.4157,
-    "Open Awareness": 0.6476
+    "Open Awareness": 0.6476,
+    "Custom demo 1": 0.803
   },
   "counts": {
-    "Tibetan Relaxing": 2,
+    "Tibetan Relaxing": 3,
     "Body Scan": 2,
-    "Loving-kindness": 3,
-    "Breathing Focus": 2,
-    "Mantra": 1,
+    "Loving-kindness": 4,
+    "Breathing Focus": 3,
+    "Mantra": 2,
     "Visualization": 1,
-    "Open Awareness": 1
+    "Open Awareness": 1,
+    "Custom demo 1": 1
   },
   "sessions": [
     {
@@ -48,7 +50,9 @@
       "exercise": "Loving-kindness",
       "score": 0.8836,
       "duration_min": 8,
-      "ts": "2026-04-16T23:00:18.965988"
+      "ts": "2026-04-16T23:00:18.965988",
+      "journal_grade": null,
+      "journal_note": ""
     },
     {
       "exercise": "Breathing Focus",
@@ -62,7 +66,9 @@
       "exercise": "Mantra",
       "score": 0.3492,
       "duration_min": 70,
-      "ts": "2026-04-16T23:00:40.647312"
+      "ts": "2026-04-16T23:00:40.647312",
+      "journal_grade": null,
+      "journal_note": ""
     },
     {
       "exercise": "Visualization",
@@ -76,19 +82,25 @@
       "exercise": "Body Scan",
       "score": 0.6466,
       "duration_min": 56,
-      "ts": "2026-04-17T09:05:37.351337"
+      "ts": "2026-04-17T09:05:37.351337",
+      "journal_grade": null,
+      "journal_note": ""
     },
     {
       "exercise": "Loving-kindness",
       "score": 0.6902,
       "duration_min": 15,
-      "ts": "2026-04-17T10:25:11.516999"
+      "ts": "2026-04-17T10:25:11.516999",
+      "journal_grade": null,
+      "journal_note": ""
     },
     {
       "exercise": "Loving-kindness",
       "score": 0.4477,
       "duration_min": 15,
-      "ts": "2026-04-17T10:25:24.508820"
+      "ts": "2026-04-17T10:25:24.508820",
+      "journal_grade": null,
+      "journal_note": ""
     },
     {
       "exercise": "Open Awareness",
@@ -113,6 +125,46 @@
       "journal_grade": 7,
       "journal_note": "The breath at the nostrils was clear today. I drifted a few times but noticed it quickly and came back without frustration.",
       "ts": "2026-04-17T10:33:39.371289"
+    },
+    {
+      "exercise": "Custom demo 1",
+      "score": 0.803,
+      "duration_min": 1,
+      "journal_grade": 9,
+      "journal_note": "The best meditation ever. I am cured of everything. My amputated grew back, and my wife came back. My father bought some milk finally. I can cereal now. And I can have a father too.",
+      "ts": "2026-04-17T20:33:50.881969"
+    },
+    {
+      "exercise": "Tibetan Relaxing",
+      "score": 0.594,
+      "duration_min": 1,
+      "journal_grade": 7,
+      "journal_note": "okay",
+      "ts": "2026-04-17T20:41:19.080076"
+    },
+    {
+      "exercise": "Loving-kindness",
+      "score": 0.7379,
+      "duration_min": 1,
+      "journal_grade": 2,
+      "journal_note": "It was horrible",
+      "ts": "2026-04-17T21:13:15.106263"
+    },
+    {
+      "exercise": "Mantra",
+      "score": 0.5987,
+      "duration_min": 1,
+      "journal_grade": 1,
+      "journal_note": "I feel stressed",
+      "ts": "2026-04-17T21:15:15.091749"
+    },
+    {
+      "exercise": "Breathing Focus",
+      "score": 0.3143,
+      "duration_min": 1,
+      "journal_grade": 8,
+      "journal_note": "Feeling well. Was able to connect to my breath nicely.",
+      "ts": "2026-04-17T22:41:10.280942"
     }
   ],
   "custom_exercise_details": {

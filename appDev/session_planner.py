@@ -3,7 +3,7 @@ import streamlit as st
 from utils import get_available_exercises
 from session_runtime import RUNTIME_KEY, init_session_runtime
 
-DEMO_DURATION_SECONDS = 30
+DEMO_DURATION_SECONDS = 15
 DURATION_OPTIONS = [DEMO_DURATION_SECONDS] + [minute * 60 for minute in range(1, 61)]
 
 
