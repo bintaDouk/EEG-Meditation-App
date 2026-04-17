@@ -102,11 +102,11 @@ EXERCISE_DETAILS = {
 }
 
 THEME = {
-    "bg":     "#f7f4ee",
-    "panel":  "#fffaf3",
-    "grid":   "#d8d2c6",
-    "accent": "#405244",
-    "prev":   "#9caf88",
+    "bg":     "#f8f4ec",
+    "panel":  "#fbf7ef",
+    "grid":   "#ddd7ca",
+    "accent": "#6f8a6f",
+    "prev":   "#b9c7ad",
     "text":   "#1f2a21",
     "muted":  "#7a7468",
 }

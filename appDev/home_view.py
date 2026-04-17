@@ -21,7 +21,7 @@ def render_home(go_to):
         unsafe_allow_html=True,
     )
 
-    start_col, library_col, repository_col = st.columns(3, gap="large")
+    start_col, library_col, repository_col = st.columns(3, gap="medium")
 
     with start_col:
         render_begin_meditation_card()
@@ -32,6 +32,12 @@ def render_home(go_to):
     with repository_col:
         render_global_repository_card()
 
-    st.markdown("## Your analytics")
-    st.caption("A calm snapshot of your practice so far.")
+    st.markdown(
+        """
+        <div class="analytics-intro">
+            <div class="analytics-title">Your analytics</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     render_analytics_panel()

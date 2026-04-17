@@ -3,7 +3,7 @@ import streamlit as st
 from app_state import go_to, init_app_state
 from home_view import render_home
 from library_card import init_library_state, render_library_view
-from placeholder_view import render_placeholder_view
+from repository_view import init_repository_state, render_repository_view
 from session_planner import init_planner_state, render_session_planner
 from session_runtime import RUNTIME_KEY
 from session_run_view import render_session_run_view
@@ -21,6 +21,7 @@ def main():
     init_app_state()
     init_planner_state()
     init_library_state()
+    init_repository_state()
 
     # A live runtime session should always take over the app before any
     # normal page routing happens.
@@ -48,11 +49,7 @@ def main():
         render_session_run_view(go_to)
         st.stop()
     elif current_view == "repository":
-        render_placeholder_view(
-            "Global repository",
-            "This route is reserved for shared resources and community content.",
-            go_to,
-        )
+        render_repository_view(on_back=lambda: go_to("home"))
         st.stop()
     else:
         go_to("home")

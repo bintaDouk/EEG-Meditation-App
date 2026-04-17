@@ -7,6 +7,6 @@ ROUTE_ID = "repository"
 def render_global_repository_card():
     render_card(
         "Global repository",
-        "Shared knowledge and community resources can live here later.",
+        "See shared practices, community momentum, and the future home of open meditation data.",
         ROUTE_ID,
     )

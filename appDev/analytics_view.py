@@ -1,6 +1,100 @@
+from datetime import datetime
+from html import escape
+from textwrap import dedent
+
 import streamlit as st
 
 from utils import _css, load_data, radar_plot
+
+
+def _parse_session_timestamp(session: dict):
+    raw_timestamp = session.get("ts", "")
+    try:
+        parsed = datetime.fromisoformat(raw_timestamp)
+    except (TypeError, ValueError):
+        return None, str(raw_timestamp)
+
+    return parsed, parsed.strftime("%b %d, %H:%M")
+
+
+def _format_session_duration(session: dict) -> str:
+    if "duration_seconds" in session:
+        seconds = session["duration_seconds"]
+        if seconds < 60:
+            return f"{seconds} sec"
+        return f"{seconds // 60} min"
+
+    duration_min = session.get("duration_min")
+    if duration_min is None:
+        return "Duration unavailable"
+    return f"{duration_min} min"
+
+
+def _sorted_sessions(data: dict) -> list[dict]:
+    sortable_sessions = []
+    for session in data.get("sessions", []):
+        parsed, label = _parse_session_timestamp(session)
+        sortable_sessions.append((parsed or datetime.min, label, session))
+
+    sortable_sessions.sort(key=lambda item: item[0], reverse=True)
+    return [
+        {
+            **session,
+            "_display_time": label,
+        }
+        for _, label, session in sortable_sessions
+    ]
+
+
+def _render_session_history_panel(data: dict):
+    sessions = _sorted_sessions(data)
+
+    if not sessions:
+        st.markdown(
+            dedent(
+                """
+                <div class="analytics-history-card">
+                    <div class="analytics-history-title">Session history</div>
+                    <div class="analytics-history-empty">
+                        Your latest sessions will appear here once they are logged.
+                    </div>
+                </div>
+                """
+            ).strip(),
+            unsafe_allow_html=True,
+        )
+        return
+
+    rows = []
+    for session in sessions:
+        exercise = escape(str(session.get("exercise", "Unknown practice")))
+        timestamp = escape(str(session["_display_time"]))
+        duration = escape(_format_session_duration(session))
+        rows.append(
+            dedent(
+                f"""
+                <div class="analytics-history-row">
+                    <div class="analytics-history-row-top">
+                        <span class="analytics-history-exercise">{exercise}</span>
+                        <span class="analytics-history-duration">{duration}</span>
+                    </div>
+                    <div class="analytics-history-time">{timestamp}</div>
+                </div>
+                """
+            ).strip()
+        )
+
+    st.markdown(
+        dedent(
+            f"""
+            <div class="analytics-history-card">
+                <div class="analytics-history-title">Session history</div>
+                <div class="analytics-history-scroll">{''.join(rows)}</div>
+            </div>
+            """
+        ).strip(),
+        unsafe_allow_html=True,
+    )
 
 
 def render_analytics_panel():
@@ -8,14 +102,26 @@ def render_analytics_panel():
 
     data = load_data()
 
-    if not data["averages"]:
-        st.info("No sessions logged yet.")
-    else:
-        left, middle, right = st.columns([1, 2, 1])
-        with middle:
+    radar_col, history_col = st.columns([1.62, 0.62], gap="medium")
+
+    with radar_col:
+        st.markdown(
+            """
+            <div class="analytics-panel-head">
+                <div class="analytics-panel-title">Practice map</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if not data["averages"]:
+            st.info("No sessions logged yet.")
+        else:
             fig = radar_plot(data["exercises"], data["averages"])
-            fig.set_size_inches(4.5, 4.5)
+            fig.set_size_inches(5.95, 5.95)
             st.pyplot(fig)
+
+    with history_col:
+        _render_session_history_panel(data)
 
     st.subheader("Overall averages")
 
