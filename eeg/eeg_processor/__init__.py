@@ -13,6 +13,7 @@ from .inspector import DataInspector
 from .visualizer import Visualizer
 from .preprocessor import Preprocessor
 from .feature_extractor import HRVFeatureExtractor
+from .classifier import HRVClassifier, SimpleFFN, HRVDataset
 
 __all__ = [
     "Config",
@@ -21,4 +22,7 @@ __all__ = [
     "Visualizer",
     "Preprocessor",
     "HRVFeatureExtractor",
+    "HRVClassifier",
+    "SimpleFFN",
+    "HRVDataset",
 ]
